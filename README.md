@@ -13,7 +13,7 @@ npm run build    # type-check + production build into dist/
 
 ## How it works
 
-- **Stack:** Vue 3, Vite, TypeScript. Font: Inter Tight (self-hosted). About 57 KB of JavaScript, gzipped.
+- **Stack:** Vue 3, Vite, TypeScript. Font: Inter Tight (self-hosted). About 62 KB of JavaScript, gzipped.
 - **Answers:** `src/lib/knowledge.ts` holds every fact, written in plain English. `src/lib/search.ts` scores the question against it (BM25-style, with synonyms, typo repair and exact rules for "basket 3", "semester 2", course names). If nothing matches well, Dyod says so instead of guessing. Everything runs in the browser, so replies are instant and nothing is invented.
 - **Feedback:** thumbs up/down on every answer, saved with the chat (in this browser only).
 - **Voice input:** the mic button uses the browser's speech recognition. It only shows in browsers that support it (Chrome, Edge, Safari). In Chrome the audio is processed by the browser vendor's online speech service, so it needs internet.
