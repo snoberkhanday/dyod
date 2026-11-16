@@ -13,7 +13,7 @@ const props = defineProps<{
   dark: boolean
   paper: string
 }>()
-const emit = defineEmits<{ new: []; open: [id: string]; remove: [id: string]; clear: []; close: [] }>()
+const emit = defineEmits<{ new: []; open: [id: string]; remove: [id: string]; clear: []; close: []; theme: [] }>()
 
 /** Today / Yesterday / Earlier, newest first. */
 const groups = computed(() => {
@@ -96,9 +96,21 @@ onBeforeUnmount(() => window.clearTimeout(reset))
       </section>
     </nav>
 
-    <button v-if="chats.length" class="clear" type="button" @click="clear">
-      {{ confirming ? 'Tap again to delete all' : 'Clear history' }}
-    </button>
+    <div class="foot">
+      <button class="theme" type="button" :aria-label="dark ? 'Switch to light mode' : 'Switch to dark mode'" @click="emit('theme')">
+        <svg v-if="dark" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.9" />
+          <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" />
+        </svg>
+        <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" />
+        </svg>
+        {{ dark ? 'Light mode' : 'Dark mode' }}
+      </button>
+      <button v-if="chats.length" class="clear" type="button" @click="clear">
+        {{ confirming ? 'Tap again to delete all' : 'Clear history' }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -243,20 +255,38 @@ ul {
   }
 }
 .del:hover {
-  color: #d63c34;
+  color: var(--danger);
 }
+.foot {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+.theme,
 .clear {
-  min-height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 10px;
   border: 0;
   border-radius: 12px;
   background: none;
   color: var(--muted);
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
+  text-align: left;
   cursor: pointer;
 }
+.theme:hover,
 .clear:hover {
   background: var(--hover);
   color: var(--text);
+}
+.clear {
+  font-size: 0.875rem;
+  padding-left: 38px;
 }
 button:focus-visible {
   outline: 2px solid var(--accent);

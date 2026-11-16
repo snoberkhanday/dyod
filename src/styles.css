@@ -7,6 +7,7 @@
   --hover: #eeeff2;
   --bubble: #eceef2;
   --side: #f2f3f5;
+  --danger: #d63c34;
   --accent: #3d63f0;
   --accent-soft: rgba(61, 99, 240, 0.16);
   --shadow: 0 1px 2px rgba(20, 22, 28, 0.04), 0 8px 28px -12px rgba(20, 22, 28, 0.12);
@@ -15,8 +16,9 @@
   color-scheme: light dark;
 }
 
+/* Dark: automatic from the device, unless the visitor chose light; or chosen by hand. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #0d0e12;
     --surface: #16181e;
     --text: #ececf0;
@@ -25,10 +27,30 @@
     --hover: #1d2027;
     --bubble: #1f222a;
     --side: #111319;
+    --danger: #ff8a82;
     --accent: #8ba2ff;
     --accent-soft: rgba(139, 162, 255, 0.2);
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 28px -12px rgba(0, 0, 0, 0.6);
+    color-scheme: dark;
   }
+}
+:root[data-theme='dark'] {
+  --bg: #0d0e12;
+  --surface: #16181e;
+  --text: #ececf0;
+  --muted: #a0a6b4;
+  --line: #272a33;
+  --hover: #1d2027;
+  --bubble: #1f222a;
+  --side: #111319;
+  --danger: #ff8a82;
+  --accent: #8ba2ff;
+  --accent-soft: rgba(139, 162, 255, 0.2);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 28px -12px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+:root[data-theme='light'] {
+  color-scheme: light;
 }
 
 *,
@@ -164,6 +186,23 @@ textarea {
   .top {
     display: flex;
   }
+}
+/* On wide screens the bar only appears once there is a chat to share. */
+@media (min-width: 900px) {
+  .app--started .top {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 24px;
+  }
+  .top .mobile-only {
+    display: none;
+  }
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
 }
 .brand-name {
   font-size: 1.125rem;

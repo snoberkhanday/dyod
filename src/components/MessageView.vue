@@ -5,7 +5,7 @@ import { render, renderPartial, toPlain } from '@/lib/markdown'
 import type { Message } from '@/lib/useChat'
 
 const props = defineProps<{ message: Message; latest: boolean; busy: boolean }>()
-const emit = defineEmits<{ ask: [text: string] }>()
+const emit = defineEmits<{ ask: [text: string]; vote: [id: number, v: 'up' | 'down'] }>()
 
 const html = computed(() => {
   const m = props.message
@@ -44,6 +44,32 @@ async function copy() {
           </svg>
           {{ copied ? 'Copied' : 'Copy' }}
         </button>
+        <span class="votes" role="group" aria-label="Was this answer helpful?">
+          <button
+            class="ghost ghost--icon"
+            type="button"
+            aria-label="Good answer"
+            :aria-pressed="message.vote === 'up'"
+            :class="{ 'is-on': message.vote === 'up' }"
+            @click="emit('vote', message.id, 'up')"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" :fill="message.vote === 'up' ? 'currentColor' : 'none'" aria-hidden="true">
+              <path d="M7 11v9H4v-9h3Zm0 0 4-8c1.7 0 2.7 1.3 2.3 3L12.8 9H19a2 2 0 0 1 2 2.3l-1 6.5a2 2 0 0 1-2 1.7H7" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" />
+            </svg>
+          </button>
+          <button
+            class="ghost ghost--icon"
+            type="button"
+            aria-label="Bad answer"
+            :aria-pressed="message.vote === 'down'"
+            :class="{ 'is-on': message.vote === 'down' }"
+            @click="emit('vote', message.id, 'down')"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" :fill="message.vote === 'down' ? 'currentColor' : 'none'" aria-hidden="true" style="transform: rotate(180deg)">
+              <path d="M7 11v9H4v-9h3Zm0 0 4-8c1.7 0 2.7 1.3 2.3 3L12.8 9H19a2 2 0 0 1 2 2.3l-1 6.5a2 2 0 0 1-2 1.7H7" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" />
+            </svg>
+          </button>
+        </span>
       </div>
       <div v-if="latest && chips.length && !busy" class="chips" role="group" aria-label="Suggested questions">
         <button v-for="c in chips" :key="c!.id" class="chip" type="button" @click="emit('ask', c!.chip)">
@@ -75,6 +101,7 @@ async function copy() {
 }
 .tools {
   display: flex;
+  align-items: center;
   margin: 6px 0 0 -8px;
 }
 .ghost {
@@ -91,6 +118,17 @@ async function copy() {
   font-size: 0.8125rem;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
+}
+.votes {
+  display: inline-flex;
+}
+.ghost--icon {
+  width: 36px;
+  padding: 0;
+  justify-content: center;
+}
+.ghost.is-on {
+  color: var(--accent);
 }
 .ghost:hover {
   background: var(--hover);

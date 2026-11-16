@@ -1,10 +1,19 @@
 <script setup lang="ts">
 import { nextTick, onMounted, ref, watch } from 'vue'
+import { useSpeech } from '@/lib/useSpeech'
 
 const props = defineProps<{ busy: boolean; autofocus?: boolean }>()
 const emit = defineEmits<{ send: [text: string]; stop: []; typing: [on: boolean] }>()
 const text = defineModel<string>({ default: '' })
 const el = ref<HTMLTextAreaElement | null>(null)
+
+const speech = useSpeech((t) => (text.value = t))
+function mic() {
+  if (speech.listening.value) speech.stop()
+  else speech.start(text.value)
+  focus()
+}
+watch(speech.listening, (on) => emit('typing', on || text.value.length > 0))
 
 function fit() {
   const t = el.value
@@ -20,6 +29,7 @@ watch(text, () => {
 
 function submit() {
   if (props.busy) return emit('stop')
+  speech.stop()
   const v = text.value.trim()
   if (!v) return
   emit('send', v)
@@ -45,7 +55,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <form class="composer" @submit.prevent="submit">
+  <div class="wrap">
+    <p v-if="speech.error.value" class="voice-error" role="alert">{{ speech.error.value }}</p>
+  <form class="composer" :class="{ 'composer--live': speech.listening.value }" @submit.prevent="submit">
     <label class="sr-only" for="q">Ask a question about DYOD</label>
     <textarea
       id="q"
@@ -53,12 +65,26 @@ onMounted(() => {
       v-model="text"
       rows="1"
       maxlength="400"
-      placeholder="Ask about DYOD…"
+      :placeholder="speech.listening.value ? 'Listening…' : 'Ask about DYOD…'"
       autocomplete="off"
       enterkeyhint="send"
       @keydown="onKey"
       @blur="emit('typing', false)"
     />
+    <button
+      v-if="speech.supported"
+      class="mic"
+      :class="{ 'mic--on': speech.listening.value }"
+      type="button"
+      :aria-label="speech.listening.value ? 'Stop listening' : 'Speak your question'"
+      :aria-pressed="speech.listening.value"
+      @click="mic"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="9" y="3" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.9" />
+        <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" />
+      </svg>
+    </button>
     <button
       class="send"
       :class="{ 'send--stop': busy }"
@@ -74,6 +100,7 @@ onMounted(() => {
       </svg>
     </button>
   </form>
+  </div>
 </template>
 
 <style scoped>
@@ -108,6 +135,53 @@ textarea {
 }
 textarea::placeholder {
   color: var(--muted);
+}
+.voice-error {
+  margin: 0 0 8px;
+  padding: 0 20px;
+  color: var(--danger);
+  font-size: 0.875rem;
+  text-align: left;
+}
+.mic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.mic:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+.mic:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.mic--on {
+  background: var(--accent);
+  color: var(--bg);
+  animation: listen 1.4s ease-in-out infinite;
+}
+.mic--on:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+@keyframes listen {
+  50% {
+    box-shadow: 0 0 0 8px var(--accent-soft);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mic--on {
+    animation: none;
+  }
 }
 .send {
   display: grid;

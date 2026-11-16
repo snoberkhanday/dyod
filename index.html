@@ -8,6 +8,13 @@
       name="description"
       content="Dyod answers your questions about the Design Your Own Degree (DYOD) programme at IUST. Short, simple, to the point."
     />
+    <script>
+      // apply a saved light/dark choice before first paint, so there is no flash
+      try {
+        var t = localStorage.getItem('dyod.theme')
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+      } catch (e) {}
+    </script>
     <meta name="theme-color" content="#f9f9f9" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0d0e12" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

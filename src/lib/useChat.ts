@@ -12,6 +12,8 @@ export interface Message {
   shown: number
   done: boolean
   follow: string[]
+  /** the reader's feedback on this answer */
+  vote?: 'up' | 'down'
 }
 
 export interface Chat {
@@ -51,7 +53,8 @@ function load(): Chat[] {
             text: m.text,
             shown: m.text.length,
             done: true,
-            follow: Array.isArray(m.follow) ? m.follow.filter((f) => ENTRY_BY_ID.has(f)) : []
+            follow: Array.isArray(m.follow) ? m.follow.filter((f) => ENTRY_BY_ID.has(f)) : [],
+            vote: m.vote === 'up' || m.vote === 'down' ? m.vote : undefined
           }))
       }))
       .filter((c) => c.messages.length)
@@ -68,7 +71,7 @@ function save(chats: Chat[]) {
       JSON.stringify(
         chats.map((c) => ({
           ...c,
-          messages: c.messages.map((m) => ({ id: m.id, role: m.role, text: m.text, follow: m.follow }))
+          messages: c.messages.map((m) => ({ id: m.id, role: m.role, text: m.text, follow: m.follow, vote: m.vote }))
         }))
       )
     )
@@ -172,6 +175,14 @@ export function useChat() {
     }, wait)
   }
 
+  /** Thumbs up or down on an answer. Pressing the same one again takes it back. */
+  function vote(id: number, v: 'up' | 'down') {
+    const m = messages.find((x) => x.id === id)
+    if (!m || m.role !== 'bot') return
+    m.vote = m.vote === v ? undefined : v
+    persist()
+  }
+
   function stop() {
     window.clearTimeout(timer)
     const last = messages[messages.length - 1]
@@ -215,7 +226,7 @@ export function useChat() {
   }
 
   return {
-    messages, status, busy, started, cue, send, stop, reset,
+    messages, status, busy, started, cue, send, stop, reset, vote,
     chats, activeId, open, remove, clearAll,
     starters: STARTERS
   }
