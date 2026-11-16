@@ -15,6 +15,7 @@ npm run build    # type-check + production build into dist/
 
 - **Stack:** Vue 3, Vite, TypeScript. Font: Inter Tight (self-hosted). About 57 KB of JavaScript, gzipped.
 - **Answers:** `src/lib/knowledge.ts` holds every fact, written in plain English. `src/lib/search.ts` scores the question against it (BM25-style, with synonyms, typo repair and exact rules for "basket 3", "semester 2", course names). If nothing matches well, Dyod says so instead of guessing. Everything runs in the browser, so replies are instant and nothing is invented.
+- **History:** chats are saved in the visitor's own browser (localStorage), never sent anywhere. Sidebar on desktop, drawer on phones.
 - **The blob:** the animated avatar from [bloub](https://github.com/jeremy-prt/bloub) by Jérémy Perret (MIT, see `THIRD_PARTY_LICENSE_bloub.txt`). Engine in `src/bot/`, mood logic in `src/components/BotAvatar.vue`.
 
 | Moment | Blob |
