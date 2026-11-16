@@ -417,6 +417,7 @@ h1 {
 }
 .credit-bar p {
   margin: 0;
+  text-wrap: balance;
   color: var(--muted);
   font-size: 0.9375rem;
   line-height: 1.4;
@@ -455,4 +456,8 @@ h1 {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+}
+
+.nb {
+  white-space: nowrap;
 }

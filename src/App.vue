@@ -203,7 +203,7 @@ onBeforeUnmount(() => {
       </div>
 
       <footer class="credit-bar">
-        <p>Built by <strong>Sheikh Hareem</strong>. 2026. All rights reserved.</p>
+        <p>Built by <strong class="nb">Sheikh Hareem</strong> and <strong class="nb">Adeel Aijaz</strong>. 2026. All rights reserved.</p>
       </footer>
     </div>
 
