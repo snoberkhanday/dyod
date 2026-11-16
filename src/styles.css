@@ -106,7 +106,7 @@ textarea {
 }
 .app {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
   height: 100dvh;
   min-width: 0;
   overflow: hidden;
@@ -369,16 +369,25 @@ h1 {
   max-width: var(--measure);
   margin: 0 auto;
 }
-.credit {
-  margin: 4px auto 0;
-  color: var(--muted);
-  font-size: 0.75rem;
-  line-height: 1.4;
+.credit-bar {
+  grid-row: 4;
+  padding: 14px max(16px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  border-top: 1px solid var(--line);
+  background: var(--bg);
   text-align: center;
 }
+.credit-bar p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+.credit-bar strong {
+  color: var(--text);
+  font-weight: 600;
+}
 .app:not(.app--started) .dock {
-  background: none;
-  padding-top: 0;
+  display: none;
 }
 
 /* ---------- motion ---------- */

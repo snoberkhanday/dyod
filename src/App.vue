@@ -185,11 +185,14 @@ onBeforeUnmount(() => {
         </div>
       </main>
 
-      <footer class="dock">
+      <div class="dock">
         <div v-if="started" class="dock-inner">
           <Composer ref="composer" v-model="draft" :busy="busy" autofocus @send="ask" @stop="stop" @typing="typing = $event" />
         </div>
-        <p class="credit">Built by Sheikh Hareem. 2026. All rights reserved.</p>
+      </div>
+
+      <footer class="credit-bar">
+        <p>Built by <strong>Sheikh Hareem</strong>. 2026. All rights reserved.</p>
       </footer>
     </div>
 
