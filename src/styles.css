@@ -106,7 +106,7 @@ textarea {
 }
 .app {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   height: 100dvh;
   min-width: 0;
   overflow: hidden;
@@ -189,6 +189,7 @@ textarea {
 }
 
 .scroll {
+  grid-row: 2;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -360,6 +361,7 @@ h1 {
 
 /* ---------- dock ---------- */
 .dock {
+  grid-row: 3;
   padding: 8px max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
   background: linear-gradient(to top, var(--bg) 70%, transparent);
 }
