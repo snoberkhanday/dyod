@@ -189,9 +189,6 @@ onBeforeUnmount(() => {
         <div v-if="started" class="dock-inner">
           <Composer ref="composer" v-model="draft" :busy="busy" autofocus @send="ask" @stop="stop" @typing="typing = $event" />
         </div>
-        <p class="note">
-          Dyod answers only from IUST's DYOD documents. For official decisions, ask the DIC.
-        </p>
         <p class="credit">Built by Sheikh Hareem. 2026. All rights reserved.</p>
       </footer>
     </div>
